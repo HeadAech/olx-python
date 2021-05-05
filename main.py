@@ -1,27 +1,26 @@
 import PySimpleGUI as sg
 import category
-import offer
-
+import offer_view
 sg.theme('DarkAmber')
 
-layout = [
-    [sg.Text("Hello world")],
-    [sg.InputText()],
-    [sg.InputText(key='-IN-')],
-    [sg.Button("Ok"), sg.Cancel("Cancel")]
-]
-
 categories = category.fetchCategories()
+category_names = ["-"]
+for x in categories:
+    category_names.append(x.name)
+    
 
-for category in categories:
-    layout.append([sg.Text(category.name)])
-
-window = sg.Window('First app', layout)
+layout = [
+    [sg.Text("OLX searcher")],
+    [sg.Text("Szukaj: "),sg.InputText(key='search')],
+    [sg.Text("Kategoria:"), sg.Combo(category_names, default_value='-', key='category')],
+    [sg.Button("Szukaj")]
+]
+window = sg.Window('OLX searcher', layout)
 
 while True:
     event, values = window.read()
-    if event == sg.WIN_CLOSED or event == 'Cancel':
+    if event == sg.WIN_CLOSED:
         break
-    print('You entered', values[0])
-    print('You also entered', values['-IN-'])
+    if event == "Szukaj":
+        offer_view.app(values['search'], values['category'], categories)
 window.close()
