@@ -4,6 +4,8 @@ sg.theme('DarkAmber')
 
 layout = [
     [sg.Text("Hello world")],
+    [sg.InputText()],
+    [sg.InputText()],
     [sg.Button("Ok"), sg.Cancel("Cancel")]   
 ]
 
@@ -14,3 +16,4 @@ while True:
     if event == sg.WIN_CLOSED or event == 'Cancel':
         break
     print('You entered', values[0])
+    print('You also entered', values[1])
