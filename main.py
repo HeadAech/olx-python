@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
-import data
+import category
+import offer
 
 sg.theme('DarkAmber')
 
@@ -10,7 +11,7 @@ layout = [
     [sg.Button("Ok"), sg.Cancel("Cancel")]
 ]
 
-categories = data.fetchCategories()
+categories = category.fetchCategories()
 
 for category in categories:
     layout.append([sg.Text(category.name)])
