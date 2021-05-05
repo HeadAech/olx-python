@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 
-
 class Category:
     def __init__(self, name, link):
         self.name = name
@@ -19,7 +18,7 @@ def fetchCategories():
     maincat = results.find_all('div', class_='item')
     categories = []
     for div in maincat:
-        name = div.find('a', class_="link").text.rstrip("\n")
+        name = div.find('a', class_="link").text.replace('\n', '')
         link = div.find('a', class_="link")['href']
         categories.append(Category(name, link))
         
