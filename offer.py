@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import os
 class Offer:
-    def __init__(self, title, price, sortingPrice, date, city, image):
+    def __init__(self, id, title, price, sortingPrice, date, city, image):
+        self.id = id
         self.title = title
         self.price = price
         self.sortingPrice = sortingPrice
@@ -22,6 +23,7 @@ def search(category_link, search_query):
     results = soup.find(id="listContainer")
     tr = results.find_all('tr', class_='wrap')
     print(url)
+    i = 0
     for el in tr:
         title = el.find('h3', class_='lheight22').find('strong').text
         price = el.find('p', class_='price').text.replace('\n', '')
@@ -35,13 +37,20 @@ def search(category_link, search_query):
             rsps = requests.get(image, stream=True)
             if not os.path.exists('images/'):
                 os.makedirs('images/')
-            file = open("images/" + title.replace('/', '-') + ".gif", "wb")
+            file = open("images/" + str(i) + ".png", "wb")
             file.write(rsps.content)
             file.close()
         else:
             image = ""
+            rsps = requests.get("https://lh3.googleusercontent.com/proxy/RxZazwtrTvFOLHQB4pOoXldzdfQi87NGurL0FSDR4FP846aCSMbW6OMDWIFSD4jN9ay9Ls14IbIJbwUHzX-MyQSgVnRiaCwjKRinkpyZHf8ASNKl65JejlyHtdsVmieLQGYseRpql58-L-A", stream = True)
+            if not os.path.exists('images/'):
+                os.makedirs('images/')
+            file = open("images/" + str(i) + ".png", "wb")
+            file.write(rsps.content)
+            file.close()
         print(image)
         print(title)
         
-        offers.append(Offer(title, price, sortingPrice, date, city, image))
+        offers.append(Offer(i, title, price, sortingPrice, date, city, image))
+        i += 1
     return offers
