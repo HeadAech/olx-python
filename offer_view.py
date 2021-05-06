@@ -1,9 +1,12 @@
+from sys import platform
+from time import time
 import PySimpleGUI as sg
 import offer
-import requests
-import os
-from PIL import ImageTk, Image
-def app(search, chosen_category, categories):
+import platform
+import webbrowser
+import threading
+
+def app(search, chosen_category, categories, sorting):
     sg.theme("DarkAmber")
     for category in categories:
         if category.name == chosen_category:
@@ -12,7 +15,7 @@ def app(search, chosen_category, categories):
     if chosen_category == "-":
         chosen_category = 'https://olx.pl/oferty/'
         
-    offers = offer.search(chosen_category, search)
+    offers = offer.search(chosen_category, search, sorting)
     layout = [
         [sg.Text("Oferty", font='Any 20')]
     ]
@@ -30,20 +33,26 @@ def app(search, chosen_category, categories):
         #     [sg.Text("Cena: " + off.price)],
         #     [sg.Text("Data: " + off.date), sg.Text(", " + off.city)]
         #     ]
-        group.append([sg.Text(off.title, font='Any 15')])
+        group.append([sg.Text("\n"+off.title, font='Any 21')])
         group.append([sg.Text("Cena: " + off.price, font='Any 15')])
         group.append([sg.Text("Data: " + off.date, font='Any 15')])
-        group.append([sg.Text(off.city + "\n\n\n", font='Any 15')])
+        group.append([sg.Text(off.city, font='Any 15')])
+        button = sg.InputText(off.link + "\n\n\n", readonly=True, text_color='black', font='Any 14', enable_events=True)
+        button.metadata = off.link
+        group.append([button])
         
-    layout.append([sg.Column(group, size=(1100,800), scrollable=True)])
+    layout.append([sg.Column(group, size=(1100,600), scrollable=True, vertical_scroll_only=True)])
     
         
     window = sg.Window("Offers", layout)
+    timer = 0
     while True:
+        # threading.Timer(5.0, app(search, chosen_category, categories, sorting)).start()
         event, values = window.read()
         if event == sg.WIN_CLOSED:
-            
             break
+                
     window.close()
     # if os.path.exists('images/'):
     #     os.remove('images/')
+
